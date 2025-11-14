@@ -8,6 +8,9 @@ import java.time.chrono.IsoChronology;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import login.Login;
+import members.Members;
+import register.Register;
 
 class Main {
         static Scanner scanner=new Scanner(System.in);
@@ -16,14 +19,15 @@ class Main {
         static String FILE_NAME="members.dat";
 
     public static void main(String[] args) {
+    //    loadMembers(members);
         int choice=0;
         while (choice!=4) {
             System.out.println("========MINI BANK SYSTEM=========");
-            System.out.println("1-Enter As New  Member");  //register
-            System.out.println("2-Enter As Existing Member"); //login
-            System.out.println("3-Enter As Admin");//admin
+            System.out.println("1-Enter As New  Member");
+            System.out.println("2-Enter As Existing Member");
+            System.out.println("3-Enter As Admin");
             System.out.println("4-Exit");
-            System.out.println("==================================");
+            System.out.println("=====================================");
             System.out.print("Enter  Your Choice:");
             try{
                 choice=scanner.nextInt();
@@ -34,8 +38,8 @@ class Main {
             }
             
             switch (choice) {
-                case 1->registerMember();
-                case 2->loginMember();
+                case 1->Register.registerMember();
+                case 2->Login.loginMember();
                 case 3->loginAdmin();
                 case 4->System.out.println("See You Later");
                 default->System.out.println("Numer not found");
@@ -44,146 +48,16 @@ class Main {
 
     }
     //=======================SECTION REGISTER MEMBER=========================
-    private static void registerMember(){
-            String test;
-            String userName;
-            String password="";
-            String confirmedpassword="";
-            // Saisie d'un unique  Utilisateur
-
-            do{
-            System.out.println("Please Enter Unique Username");
-            userName=scanner.nextLine();
-                if(checkMember(userName)){
-                System.out.println("User Already Exist");
-            }
-            }
-            while(checkMember(userName));
-
-
-            // Saisie d'un mode pass
-            do{
-                System.out.println("Please Enter Your Password");
-                password=scanner.nextLine();
-                System.out.println("Please Enter Your Password again");
-                confirmedpassword=scanner.nextLine();
-                if(!password.equals(confirmedpassword)){
-                    System.out.println("Password not matched try again");
-                }
-            }while (!password.equals(confirmedpassword));
-
-            // add member
-            members.add(new Members(userName,password));
-            try(ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))){
-                oos.writeObject(members);
-            }catch(IOException e){
-                System.out.println("Something went wrong!");
-            }
-            System.out.println("User created Successfully");
-            System.out.println("----------------");
-            System.out.println("Do You Enter as exist Member click Y or Quit Click Q");
-            test=scanner.nextLine();
-            if(test.equalsIgnoreCase("Y")){
-                detailsMember();
-            }
-
-        }
+ 
         //===================================END REGISTER MEMBER SECTION====================================================================
 
         //===================================START LOGIN MEMBER SECTION====================================================================
 
+
         // Check Member if Exist in Members (RETURN TRUE|FALSE)
-        private static boolean checkMember(String username){
-            for(Members mem:members){
-                if(mem.getMember().equals(username)){
-                    return true;
-                }
-            }
-            return false;
-        }
-        // Check Member if Exist in Members (RETURN TRUE|FALSE)
-        private static void loginMember(){
-                String username="";
-                String password="";
-                boolean login =false;
-                String tryLogin="no";
-                System.out.println("Enter Your username");
-                username=scanner.nextLine();
-                System.out.println("Enter Your password");
-                password=scanner.nextLine();
-                while (!login) {
-                    System.out.println(login);
-                    for(Members mem:members){
-                        if(mem.getMember().equals(username) && mem.getMemberPass().equals(password)){
-                            login = true;
-                            detailsMember();
-                        }
-                            System.out.println("User or password is Wrong");
-                            System.out.println("You want try again or Exit:(yes/no)");
-                            tryLogin=scanner.nextLine();
-                            if(tryLogin=="yes"){
-                                loginMember();
-                            }
-                            else{
-                                break;
-                            }
-                    
-                    }
-                }
+        
 
-                
-        }
-        // AVAILABLE OPTIONS FOR MEMBER (DEPOSIT|WITHDRAW)
-        private static void detailsMember(){
-            
-            int balance =10;
-            int ChoiceMember=0;
-            while(ChoiceMember!=4){
-                System.out.println("Enter Your Choice:");
-                ChoiceMember=scanner.nextInt();
-                scanner.nextLine();
-                System.out.printf("Your Balance is:$ %d \n",balance);
-                System.out.println("1-Deposit ");
-                System.out.println("2-Withdraw ");
-                System.out.println("4-Exit ");
-                switch (ChoiceMember) {
-                    case 1->deposit(balance);
-                    case 2 ->withdraw(balance);
-                    case 4 -> System.out.println("See You Next Session");
-                
-                    default->System.out.println("something went Wrong!!");
-                }
-            }
-
-
-
-        }
-        //Deposit Function
-        private static void deposit(int balance){
-            int amount=0;
-            System.out.println("Enter the amount You Want Deposit: ");
-            amount=scanner.nextInt();
-            scanner.nextLine();
-            balance+=amount;
-            System.out.println("Your Balance Now Is: $" + balance);
-            
-        }
-        // Withdraw Function
-        private static void withdraw(int balance){
-            int withdraw=0;
-            System.out.println("Enter The amount You want to withdraw");
-            withdraw=scanner.nextInt();
-            scanner.nextLine();
-            if(balance<=0 || balance < withdraw){
-                System.out.println("You dont have enough money to withdraw");
-            }
-            else{
-            balance-=withdraw;
-            System.out.println("Successfully withdrawn $" + withdraw + ".");
-            System.out.println("Your Account have Now $" + balance + ".");
-            }
-        }
-        //===================================END EXIST MEMBER SECTION====================================================================
+               //===================================END EXIST MEMBER SECTION====================================================================
         // LOGIN & AVAILABLE OPTIONS FOR ADMIN (ADD |DELETE MEMBER)
         private static void loginAdmin(){
             int choiceAdmin=0; 
@@ -206,17 +80,16 @@ class Main {
                     switch (choiceAdmin) {
                         case 1-> seeAllMembers();
                         case 2-> adminCheckMember();
+                        case 4-> System.out.println("Good Bye !!");
+                        default->System.out.println("Number Out of Range");
                     }
                 }
             }
         }
         private static void seeAllMembers(){
-            // for(Members mem:members){
-            //     System.out.println(mem.getMembers());
-            // }
             int i=1;
             for(Members mem:members){
-                System.out.printf("%d - UserName: %s: \n",i,mem.getMember());
+                System.out.printf("%d - UserName: %s ; Password: %s \n",i,mem.getMember(),mem.getMemberPass());
                 i++;
             }
         }
@@ -234,11 +107,15 @@ class Main {
             System.out.println("lol");
         }
         @SuppressWarnings("unchecked")
-        static void loadMembers(){
+        public static void loadMembers(ArrayList<Members> members){
             try (ObjectInputStream ois=new ObjectInputStream(new FileInputStream(FILE_NAME))) {
                     members= (ArrayList<Members>) ois.readObject();
+                    for (Members mem:members){
+                        System.out.println(mem);
+                    }
+
             } catch (Exception e) {
-                System.out.println("Data Not loaded ");
+                    System.out.println("Members Not  Loaded");
             }
         }
         
