@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.classfile.instruction.ThrowInstruction;
+import java.lang.reflect.Array;
+import java.lang.reflect.Member;
 import java.time.chrono.IsoChronology;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -87,6 +89,7 @@ class Main {
             }
         }
         private static void seeAllMembers(){
+            ArrayList<Members> members=loadMembers();
             int i=1;
             for(Members mem:members){
                 System.out.printf("%d - UserName: %s ; Password: %s \n",i,mem.getMember(),mem.getMemberPass());
@@ -107,15 +110,14 @@ class Main {
             System.out.println("lol");
         }
         @SuppressWarnings("unchecked")
-        public static void loadMembers(ArrayList<Members> members){
+        public static ArrayList<Members> loadMembers(){
             try (ObjectInputStream ois=new ObjectInputStream(new FileInputStream(FILE_NAME))) {
-                    members= (ArrayList<Members>) ois.readObject();
-                    for (Members mem:members){
-                        System.out.println(mem);
-                    }
+                  
+                    return (ArrayList<Members>) ois.readObject();
 
             } catch (Exception e) {
                     System.out.println("Members Not  Loaded");
+                    return new ArrayList<>();
             }
         }
         

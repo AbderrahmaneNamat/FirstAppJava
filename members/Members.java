@@ -1,6 +1,8 @@
 package members;
 
-public  class Members  {
+import java.io.Serializable;
+
+public  class Members implements Serializable  {
     private String userName;
     private String password;
     public Members(String userName,String password){
