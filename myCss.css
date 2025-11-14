@@ -1,0 +1,38 @@
+body{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-image: url(images/bg.png);
+}
+header{
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+.elementsContainer > div{
+
+    display: flex;
+    background-color: black;
+    color: white;
+
+}
+.elements div{
+    margin-left: 15px;
+}
+.content{
+    z-index: 4;
+    background-color: white;
+}
+img{
+     width: 600px;
+     margin-left: 40%;
+     height: 450px;
+     
+}
+footer{
+    background-color: black;
+    color: white;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
